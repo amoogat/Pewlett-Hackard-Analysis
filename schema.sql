@@ -120,7 +120,7 @@ ORDER BY to_date DESC;
 -- getting correct employment dates
 SELECT e.emp_no,
 	e.first_name,
-e.last_name,
+    e.last_name,
 	e.gender,
 	s.salary,
 	de.to_date
@@ -158,7 +158,7 @@ INNER JOIN dept_emp AS de
 ON (ce.emp_no = de.emp_no)
 INNER JOIN departments AS d
 ON (de.dept_no = d.dept_no);
--- Creates a query for just sales team
+-- Creates a query for just the sales and dev teams
 SELECT ce.emp_no,
 ce.first_name,
 ce.last_name,
@@ -169,3 +169,55 @@ ON (ce.emp_no = de.emp_no)
 INNER JOIN departments AS d
 ON (de.dept_no = d.dept_no)
 WHERE d.dept_name IN ('Sales', 'Development');
+SELECT * from current_emp;
+-- Gets list and number of employees about to retire
+SELECT ce.emp_no,
+	ce.first_name,
+	ce.last_name,
+	ti.title,
+	ti.from_date,
+	s.salary
+INTO retiring_emps
+FROM current_emp as ce
+INNER JOIN titles as ti
+ON (ce.emp_no = ti.emp_no)
+INNER JOIN employees as e
+ON (e.emp_no = ce.emp_no)
+INNER JOIN salaries as s
+ON (s.emp_no = ce.emp_no)
+WHERE (e.birth_date BETWEEN '1952-01-01' AND '1955-12-31');
+-- Partitions the data (most recent title per employee)
+SELECT emp_no,
+	first_name,
+	last_name,
+	title,
+	from_date,
+	salary
+INTO retiring_nodups
+FROM
+ (SELECT emp_no,
+	first_name,
+	last_name,
+	title,
+	from_date,
+	salary, ROW_NUMBER() OVER
+ (PARTITION BY (emp_no)
+ ORDER BY from_date DESC) rn
+ FROM retiring_emps
+ ) tmp WHERE rn = 1
+ORDER BY emp_no;
+-- Creates table for mentorship program
+SELECT ce.emp_no,
+	ce.first_name,
+	ce.last_name,
+	ti.title,
+	ti.from_date,
+	ti.to_date
+INTO mentorship_emps
+FROM current_emp as ce
+INNER JOIN titles as ti
+ON (ce.emp_no = ti.emp_no)
+INNER JOIN employees as e
+ON (ce.emp_no = e.emp_no)
+WHERE (e.birth_date BETWEEN '1955-01-01' AND '1955-12-31')
+	AND ti.to_date IN ('9999-01-01');

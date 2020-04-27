@@ -6,6 +6,11 @@ The problem faced in this repo was the sheer amount of data on employees that wa
 ![](EmployeeDB.png)
 
 ## The Solution - see schema.SQL for code
-Using SQL, this code parses through the data and joins the tables together in order to get the results that were required for analysis. It also involved filtering the data in order to only include current employees for the mentorship program as well as for the birth date of the employee. After exporting the two lists of data containing these employees' names and titles, a summary chart was created for each list in which the counts of retirement and mentorship eligibilities are provided by title (below). 
-![](retiring_summary)
+Using SQL, this code parses through the data and joins the tables together in order to get the results that were required for analysis. It also involved filtering the data in order to only include current employees for the mentorship program as well as for the birth date of the employee. After exporting the two lists of data containing these employees' names and titles, a summary chart was created for each list in which the counts of retirement (top) and mentorship (bottom) eligibilities are provided by title (below). For a full list of the employees, see the data folder - 
 
+![retirement count by title](retiring_summary.JPG)
+---
+![mentorship count by title](mentor_summary.JPG)
+
+## Analysis
+From the charts, we can see that there are many senior engineers and senior staff nearing the retirement mark. This makes sense considering they have the title 'Senior,' probably since they have been working there a little longer or have some experience in the field. A future analysis could include a salary analysis based on birth date, hire date, gender, and title to assess the company's economic equality.
